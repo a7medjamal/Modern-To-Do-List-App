@@ -18,7 +18,10 @@ class CreateNewTaskButton extends StatelessWidget {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          SvgPicture.asset('assets/icons/add_icon.svg', color: Colors.white),
+          SvgPicture.asset(
+            'assets/icons/add_icon.svg',
+            colorFilter: const ColorFilter.mode(Colors.white, BlendMode.srcIn),
+          ),
           const SizedBox(width: 10),
           const Text(
             'Create New Task',

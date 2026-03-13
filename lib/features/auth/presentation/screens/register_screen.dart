@@ -1,14 +1,13 @@
 import 'package:cat_to_do_list/core/app_router.dart';
-import 'package:cat_to_do_list/core/utils/widgets/custom_app_bar.dart';
 import 'package:cat_to_do_list/features/auth/presentation/cubit/auth_cubit.dart';
 import 'package:cat_to_do_list/features/auth/presentation/cubit/auth_state.dart';
-import 'package:cat_to_do_list/features/auth/widgets/custom_text_field.dart';
+import 'package:cat_to_do_list/features/auth/widgets/register_button.dart';
+import 'package:cat_to_do_list/features/auth/widgets/register_form.dart';
+import 'package:cat_to_do_list/features/auth/widgets/register_header.dart';
 import 'package:cat_to_do_list/features/auth/widgets/user_alert.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
-
-import '../../widgets/custom_button.dart';
 
 class RegisterScreen extends StatefulWidget {
   const RegisterScreen({super.key});
@@ -18,9 +17,80 @@ class RegisterScreen extends StatefulWidget {
 }
 
 class _RegisterScreenState extends State<RegisterScreen> {
-  String _email = '';
-  String _password = '';
-  String password2 = '';
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+
+  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
+  final TextEditingController _confirmPasswordController =
+      TextEditingController();
+
+  @override
+  void dispose() {
+    _emailController.dispose();
+    _passwordController.dispose();
+    _confirmPasswordController.dispose();
+    super.dispose();
+  }
+
+  void _showDialog({
+    required String title,
+    required String content,
+    required VoidCallback onPressed,
+  }) {
+    UserAlertDialog.show(
+      context: context,
+      title: title,
+      content: content,
+      buttonText: 'OK',
+      onPressed: onPressed,
+    );
+  }
+
+  String? _validateEmail(String? value) {
+    if (value == null || value.trim().isEmpty) {
+      return 'Email is required';
+    }
+
+    final emailRegex = RegExp(r'^[^@\s]+@[^@\s]+\.[^@\s]+$');
+    if (!emailRegex.hasMatch(value.trim())) {
+      return 'Enter a valid email';
+    }
+
+    return null;
+  }
+
+  String? _validatePassword(String? value) {
+    if (value == null || value.trim().isEmpty) {
+      return 'Password is required';
+    }
+
+    if (value.trim().length < 6) {
+      return 'Password must be at least 6 characters';
+    }
+
+    return null;
+  }
+
+  String? _validateConfirmPassword(String? value) {
+    if (value == null || value.trim().isEmpty) {
+      return 'Confirm password is required';
+    }
+
+    if (value.trim() != _passwordController.text.trim()) {
+      return 'Passwords do not match';
+    }
+
+    return null;
+  }
+
+  void _register() {
+    if (!_formKey.currentState!.validate()) return;
+
+    context.read<AuthCubit>().signUp(
+      _emailController.text.trim(),
+      _passwordController.text.trim(),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -28,105 +98,50 @@ class _RegisterScreenState extends State<RegisterScreen> {
       body: BlocConsumer<AuthCubit, AuthState>(
         listener: (context, state) {
           if (state is AuthFailure) {
-            UserAlertDialog.show(
-              context: context,
+            _showDialog(
               title: 'Registration Failed',
               content: state.message,
-              buttonText: 'OK',
-              onPressed: () {
-                GoRouter.of(context).pop();
-              },
+              onPressed: () => context.pop(),
             );
-          } else if (state is AuthSuccess) {
-            UserAlertDialog.show(
-              context: context,
+          } else if (state is AuthAuthenticated) {
+            _showDialog(
               title: 'Success',
-              content: 'Registered successfully! \nLogin now!',
-              buttonText: 'OK',
-              onPressed: () {
-                GoRouter.of(context).push(AppRouter.kLoginView);
-              },
+              content: 'Registered successfully!\nLogin now!',
+              onPressed: () => context.go(AppRouter.kLoginView),
             );
           }
         },
         builder: (context, state) {
-          return SingleChildScrollView(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                CustomAppBar(),
-                const SizedBox(height: 150),
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
+          final bool isLoading = state is AuthLoading;
+
+          return SafeArea(
+            child: SingleChildScrollView(
+              child: Padding(
+                padding: const EdgeInsets.all(8),
+                child: Form(
+                  key: _formKey,
                   child: Column(
                     children: [
-                      const Text(
-                        'Register !',
-                        style: TextStyle(fontSize: 24, color: Colors.white),
-                      ),
+                      const SizedBox(height: 150),
+                      const RegisterHeader(),
                       const SizedBox(height: 20),
-                      CustomTextFormField(
-                        onChanged: (data) {
-                          _email = data;
-                        },
-                        hintText: 'Email',
-                      ),
-                      const SizedBox(height: 20),
-                      CustomTextFormField(
-                        onChanged: (data) {
-                          _password = data;
-                        },
-                        hintText: 'Password',
-                        obscureText: true,
-                      ),
-                      const SizedBox(height: 20),
-                      CustomTextFormField(
-                        onChanged: (data) {
-                          password2 = data;
-                        },
-                        hintText: 'Confirm Password',
-                        obscureText: true,
+                      RegisterForm(
+                        emailController: _emailController,
+                        passwordController: _passwordController,
+                        confirmPasswordController: _confirmPasswordController,
+                        validateEmail: _validateEmail,
+                        validatePassword: _validatePassword,
+                        validateConfirmPassword: _validateConfirmPassword,
                       ),
                       const SizedBox(height: 30),
+                      RegisterButtonSection(
+                        isLoading: isLoading,
+                        onRegister: _register,
+                      ),
                     ],
                   ),
                 ),
-                SizedBox(
-                  width: double.infinity,
-                  child: CustomButton(
-                    text: state is AuthLoading ? 'LOADING...' : 'REGISTER',
-                    textColor: Colors.white,
-                    backgroundColor: Colors.green,
-                    onPressed: () {
-                      if (_email.isEmpty ||
-                          _password.isEmpty ||
-                          password2.isEmpty) {
-                        UserAlertDialog.show(
-                          context: context,
-                          title: 'Error',
-                          content: 'All fields are required.',
-                          buttonText: 'OK',
-                          onPressed: () {
-                            Navigator.of(context).pop();
-                          },
-                        );
-                      }
-                      if (_password != password2) {
-                        UserAlertDialog.show(
-                          context: context,
-                          title: 'Password Mismatch',
-                          content: 'Passwords do not match.',
-                          buttonText: 'OK',
-                          onPressed: () {
-                            Navigator.of(context).pop();
-                          },
-                        );
-                      }
-                      context.read<AuthCubit>().signUp(_email, _password);
-                    },
-                  ),
-                ),
-              ],
+              ),
             ),
           );
         },

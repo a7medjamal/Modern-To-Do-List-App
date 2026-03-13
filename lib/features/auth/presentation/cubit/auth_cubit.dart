@@ -1,8 +1,9 @@
-import 'package:cat_to_do_list/features/auth/domain/repositories/usecases/login_user.dart';
-import 'package:cat_to_do_list/features/auth/domain/repositories/usecases/signup_user.dart';
-import 'package:cat_to_do_list/features/auth/domain/repositories/usecases/user_google_register.dart';
-import 'package:cat_to_do_list/features/auth/domain/repositories/usecases/user_logout.dart';
+import 'package:cat_to_do_list/features/auth/domain/usecases/login_user.dart';
+import 'package:cat_to_do_list/features/auth/domain/usecases/signup_user.dart';
+import 'package:cat_to_do_list/features/auth/domain/usecases/user_google_register.dart';
+import 'package:cat_to_do_list/features/auth/domain/usecases/user_logout.dart';
 import 'package:cat_to_do_list/features/auth/presentation/cubit/auth_state.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class AuthCubit extends Cubit<AuthState> {
@@ -16,45 +17,100 @@ class AuthCubit extends Cubit<AuthState> {
     required this.signUpUser,
     required this.logoutUser,
     required this.signInWithGoogle,
-  }) : super(AuthInitial());
+  }) : super(const AuthInitial());
 
   Future<void> login(String email, String password) async {
-    emit(AuthLoading());
+    emit(const AuthLoading());
+
     try {
-      await loginUser.call(email, password);
-      emit(AuthSuccess());
+      await loginUser(email, password);
+      emit(const AuthAuthenticated());
     } catch (e) {
-      emit(AuthFailure(e.toString()));
+      emit(AuthFailure(_mapErrorMessage(e)));
     }
   }
 
   Future<void> signUp(String email, String password) async {
-    emit(AuthLoading());
+    emit(const AuthLoading());
+
     try {
-      await signUpUser.call(email, password);
-      emit(AuthSuccess());
+      await signUpUser(email, password);
+      emit(const AuthAuthenticated());
     } catch (e) {
-      emit(AuthFailure(e.toString()));
+      emit(AuthFailure(_mapErrorMessage(e)));
     }
   }
 
   Future<void> signInWithGoogleAccount() async {
-    emit(AuthLoading());
+    emit(const AuthLoading());
+
     try {
-      await signInWithGoogle.call();
-      emit(AuthSuccess());
+      await signInWithGoogle();
+      emit(const AuthAuthenticated());
     } catch (e) {
-      emit(AuthFailure(e.toString()));
+      final message = _mapErrorMessage(e);
+
+      if (message == 'cancelled') {
+        emit(const AuthInitial());
+        return;
+      }
+
+      emit(AuthFailure(message));
     }
   }
 
   Future<void> logout() async {
-    emit(AuthLoading());
+    emit(const AuthLoading());
+
     try {
-      await logoutUser.call();
-      emit(AuthLoggedOut());
+      await logoutUser();
+      emit(const AuthUnauthenticated());
     } catch (e) {
-      emit(AuthFailure(e.toString()));
+      emit(AuthFailure(_mapErrorMessage(e)));
     }
+  }
+
+  String _mapErrorMessage(Object error) {
+    if (error is FirebaseAuthException) {
+      switch (error.code) {
+        case 'invalid-email':
+          return 'Invalid email address.';
+        case 'user-disabled':
+          return 'This account has been disabled.';
+        case 'user-not-found':
+          return 'No user found for this email.';
+        case 'wrong-password':
+        case 'invalid-credential':
+          return 'Incorrect email or password.';
+        case 'email-already-in-use':
+          return 'This email is already in use.';
+        case 'weak-password':
+          return 'Password is too weak.';
+        case 'network-request-failed':
+          return 'Please check your internet connection.';
+        default:
+          return error.message ?? 'Authentication failed.';
+      }
+    }
+
+    final text = error.toString();
+
+    if (text.contains('cancelled') ||
+        text.contains('canceled') ||
+        text.contains('Google sign-in was cancelled')) {
+      return 'cancelled';
+    }
+
+    if (text.contains('ApiException: 10')) {
+      return 'Google Sign-In configuration error. Check SHA-1, SHA-256, package name, and google-services.json.';
+    }
+
+    if (text.contains('network_error') ||
+        text.contains('SocketException') ||
+        text.contains('Failed host lookup')) {
+      return 'Please check your internet connection.';
+    }
+
+    return text.replaceFirst('Exception: ', '');
   }
 }

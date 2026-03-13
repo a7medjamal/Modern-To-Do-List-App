@@ -1,39 +1,23 @@
 // lib/features/tasks/data/repositories/task_repository_impl.dart
 
+import 'package:cat_to_do_list/core/errors/task_exception.dart';
 import 'package:cat_to_do_list/core/utils/auth_helper.dart';
 import 'package:cat_to_do_list/features/tasks/data/models/task_model.dart';
 import 'package:cat_to_do_list/features/tasks/domain/entities/task.dart';
 import 'package:cat_to_do_list/features/tasks/domain/repositories/task_repository.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter/foundation.dart'; // For kDebugMode logging
-
-// Define custom exceptions for better error handling (Optional but recommended)
-class TaskRepositoryException implements Exception {
-  final String message;
-  final dynamic originalException;
-  TaskRepositoryException(this.message, [this.originalException]);
-
-  @override
-  String toString() {
-    if (originalException != null) {
-      return 'TaskRepositoryException: $message (Caused by: $originalException)';
-    }
-    return 'TaskRepositoryException: $message';
-  }
-}
+import 'package:flutter/foundation.dart';
 
 class TaskRepositoryImpl implements TaskRepository {
   final FirebaseFirestore firestore;
 
   TaskRepositoryImpl({required this.firestore});
 
-  // Helper to get the correct path in Firestore, ensuring user separation
+  /// Returns the Firestore tasks collection for the signed-in user.
   CollectionReference _tasksCollection(String uid) =>
       firestore.collection('users').doc(uid).collection('tasks');
 
-  // Helper for logging errors consistently
   void _logError(String message, dynamic error, StackTrace? stackTrace) {
-    // Use debugPrint in debug mode, consider a proper logger for release
     if (kDebugMode) {
       debugPrint(
         'TaskRepository Error: $message\nException: $error\nStackTrace: $stackTrace',
@@ -44,17 +28,12 @@ class TaskRepositoryImpl implements TaskRepository {
   @override
   Future<void> addTask(Task task) async {
     try {
-      final uid = AuthHelper.getCurrentUserId(); // Throws if not logged in
-      // Ensure ID is set if it's a new task
+      final uid = AuthHelper.getCurrentUserId();
       final taskWithId =
           task.id.isEmpty
-              ? task.copyWith(
-                id: _tasksCollection(uid).doc().id,
-              ) // Generate ID if empty
+              ? task.copyWith(id: _tasksCollection(uid).doc().id)
               : task;
       final taskModel = TaskModel.fromEntity(taskWithId);
-
-      // Use the potentially generated ID for the document path
       await _tasksCollection(uid).doc(taskModel.id).set(taskModel.toMap());
     } on FirebaseException catch (e, s) {
       _logError('Error adding task to Firestore', e, s);
@@ -79,7 +58,6 @@ class TaskRepositoryImpl implements TaskRepository {
       await _tasksCollection(uid).doc(task.id).update(taskModel.toMap());
     } on FirebaseException catch (e, s) {
       _logError('Error updating task in Firestore (ID: ${task.id})', e, s);
-      // Check for specific errors like 'not-found'
       if (e.code == 'not-found') {
         throw TaskRepositoryException('Task not found, could not update.', e);
       }
@@ -123,19 +101,20 @@ class TaskRepositoryImpl implements TaskRepository {
   Stream<List<Task>> getTasks() {
     try {
       final uid = AuthHelper.getCurrentUserId();
-      return _tasksCollection(
-        uid,
-      ).orderBy('timestamp', descending: true).snapshots().map((snapshot) {
-        try {
-          return snapshot.docs.map((doc) {
-            final data = doc.data() as Map<String, dynamic>;
-            return TaskModel.fromMap(data, documentId: doc.id).toEntity();
-          }).toList();
-        } catch (e, s) {
-          _logError('Error parsing tasks from snapshot', e, s);
-          throw TaskRepositoryException('Failed to parse tasks data', e);
-        }
-      });
+      return _tasksCollection(uid)
+          .orderBy('timestamp', descending: true)
+          .snapshots()
+          .map((snapshot) {
+            try {
+              return snapshot.docs.map((doc) {
+                final data = doc.data() as Map<String, dynamic>;
+                return TaskModel.fromMap(data, documentId: doc.id).toEntity();
+              }).toList();
+            } catch (e, s) {
+              _logError('Error parsing tasks from snapshot', e, s);
+              throw TaskRepositoryException('Failed to parse tasks data', e);
+            }
+          });
     } catch (e, s) {
       _logError('Error getting tasks stream', e, s);
       throw TaskRepositoryException('Failed to get tasks stream', e);
@@ -143,7 +122,7 @@ class TaskRepositoryImpl implements TaskRepository {
   }
 
   @override
-  Future<Task?> GetTaskById(String taskId) async {
+  Future<Task?> getTaskById(String taskId) async {
     if (taskId.isEmpty) {
       throw TaskRepositoryException('Cannot get task with empty ID.');
     }

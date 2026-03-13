@@ -1,12 +1,14 @@
-// ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 class CustomAppBar extends StatelessWidget {
-  String? iconPath;
-  String? pfpPath, pName, taskName;
-  bool taskScreen = false;
-  CustomAppBar({
+  final String? iconPath;
+  final String? pfpPath;
+  final String? pName;
+  final String? taskName;
+  final bool taskScreen;
+
+  const CustomAppBar({
     super.key,
     this.iconPath,
     this.pfpPath,
@@ -14,6 +16,7 @@ class CustomAppBar extends StatelessWidget {
     this.taskName,
     this.taskScreen = false,
   });
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -28,34 +31,25 @@ class CustomAppBar extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            taskScreen
-                ? Text(
-                  taskName!,
-                  style: const TextStyle(
-                    fontSize: 14,
-                    fontWeight: FontWeight.w400,
-                    color: Colors.white,
-                  ),
-                )
-                : Text(
-                  'Hello ${pName ?? 'User'},',
-                  style: const TextStyle(
-                    fontSize: 14,
-                    fontWeight: FontWeight.w400,
-                    color: Colors.white,
-                  ),
+            Text(
+              taskScreen ? (taskName ?? '') : 'Hello ${pName ?? 'User'},',
+              style: const TextStyle(
+                fontSize: 14,
+                fontWeight: FontWeight.w400,
+                color: Colors.white,
+              ),
+            ),
+            if (!taskScreen) ...[
+              const SizedBox(height: 5),
+              const Text(
+                'Keep Plan For 1 Day',
+                style: TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.w600,
+                  color: Colors.white,
                 ),
-            const SizedBox(height: 5),
-            !taskScreen
-                ? Text(
-                  'Keep Plan For 1 Day',
-                  style: const TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.w600,
-                    color: Colors.white,
-                  ),
-                )
-                : const SizedBox(height: 0),
+              ),
+            ],
           ],
         ),
         elevation: 0,
@@ -70,30 +64,23 @@ class CustomAppBar extends StatelessWidget {
               child: SvgPicture.asset(
                 iconPath!,
                 height: 30,
-                color: Colors.white,
+                colorFilter: const ColorFilter.mode(
+                  Colors.white,
+                  BlendMode.srcIn,
+                ),
               ),
             )
           else
             const SizedBox(width: 1),
         ],
-        leading:
-            pfpPath != null
-                ? Padding(
-                  padding: const EdgeInsets.only(left: 12.0),
-                  child: SvgPicture.asset(
-                    pfpPath!,
-                    fit: BoxFit.contain,
-                    height: 32,
-                  ),
-                )
-                : Padding(
-                  padding: const EdgeInsets.only(left: 12.0),
-                  child: SvgPicture.asset(
-                    'assets/icons/profile_icon.svg',
-                    fit: BoxFit.contain,
-                    height: 32,
-                  ),
-                ),
+        leading: Padding(
+          padding: const EdgeInsets.only(left: 12.0),
+          child: SvgPicture.asset(
+            pfpPath ?? 'assets/icons/profile_icon.svg',
+            fit: BoxFit.contain,
+            height: 32,
+          ),
+        ),
       ),
     );
   }

@@ -1,9 +1,9 @@
 import 'package:cat_to_do_list/core/app_router.dart';
-import 'package:cat_to_do_list/core/utils/widgets/custom_app_bar.dart';
 import 'package:cat_to_do_list/features/auth/presentation/cubit/auth_cubit.dart';
 import 'package:cat_to_do_list/features/auth/presentation/cubit/auth_state.dart';
-import 'package:cat_to_do_list/features/auth/widgets/custom_button.dart';
-import 'package:cat_to_do_list/features/auth/widgets/custom_text_field.dart';
+import 'package:cat_to_do_list/features/auth/widgets/login_buttons.dart';
+import 'package:cat_to_do_list/features/auth/widgets/login_form.dart';
+import 'package:cat_to_do_list/features/auth/widgets/login_header.dart';
 import 'package:cat_to_do_list/features/auth/widgets/user_alert.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -17,127 +17,87 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
-  String _email = '';
-  String _password = '';
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
+
+  @override
+  void dispose() {
+    _emailController.dispose();
+    _passwordController.dispose();
+    super.dispose();
+  }
+
+  void _showDialog(String title, String content) {
+    UserAlertDialog.show(
+      context: context,
+      title: title,
+      content: content,
+      buttonText: 'OK',
+      onPressed: () => context.pop(),
+    );
+  }
+
+  void _login() {
+    if (!_formKey.currentState!.validate()) return;
+
+    context.read<AuthCubit>().login(
+      _emailController.text.trim(),
+      _passwordController.text.trim(),
+    );
+  }
+
+  void _signInWithGoogle() {
+    context.read<AuthCubit>().signInWithGoogleAccount();
+  }
+
+  void _goToRegister() {
+    context.push(AppRouter.kRegisterView);
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: BlocConsumer<AuthCubit, AuthState>(
-        listener: (context, state) {
-          if (state is AuthFailure) {
-            UserAlertDialog.show(
-              context: context,
-              title: 'Login Failed',
-              content: state.message,
-              buttonText: 'OK',
-              onPressed: () => {GoRouter.of(context).pop()},
-            );
-          } else if (state is AuthSuccess) {
-            UserAlertDialog.show(
-              context: context,
-              title: 'Success',
-              content: 'Welcome back $_email',
-              buttonText: 'OK',
-              onPressed: () => {GoRouter.of(context).push(AppRouter.kHomeView)},
-            );
-          }
-        },
-        builder: (context, state) {
-          return SingleChildScrollView(
-            child: SafeArea(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  CustomAppBar(),
-                  const SizedBox(height: 150),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 10),
-                    child: Column(
-                      children: [
-                        const Text(
-                          'Welcome Back',
-                          style: TextStyle(fontSize: 24, color: Colors.white),
-                        ),
-                        const SizedBox(height: 20),
-                        CustomTextFormField(
-                          onChanged: (data) => _email = data,
-                          hintText: 'Email',
-                        ),
-                        const SizedBox(height: 20),
-                        CustomTextFormField(
-                          onChanged: (data) => _password = data,
-                          hintText: 'Password',
-                          obscureText: true,
-                        ),
-                      ],
-                    ),
-                  ),
-                  const SizedBox(height: 40),
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Column(
-                      children: [
-                        SizedBox(
-                          width: double.infinity,
-                          child: CustomButton(
-                            text: state is AuthLoading ? 'LOADING...' : 'LOGIN',
-                            textColor: Colors.white,
-                            backgroundColor: Colors.transparent,
-                            onPressed: () {
-                              if (_email.isEmpty || _password.isEmpty) {
-                                UserAlertDialog.show(
-                                  context: context,
-                                  title: 'Error',
-                                  content: 'Email and password are required.',
-                                  buttonText: 'OK',
-                                  onPressed: () => GoRouter.of(context).pop(),
-                                );
-                                return;
-                              }
-                              context.read<AuthCubit>().login(
-                                _email,
-                                _password,
-                              );
-                            },
-                          ),
-                        ),
-                        const SizedBox(height: 20),
-                        SizedBox(
-                          width: double.infinity,
-                          child: CustomButton(
-                            text: 'SIGN IN WITH GOOGLE',
-                            textColor: Colors.white,
-                            backgroundColor: Colors.blue,
-                            onPressed: () {
-                              context
-                                  .read<AuthCubit>()
-                                  .signInWithGoogleAccount();
-                            },
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: SizedBox(
-                      width: double.infinity,
-                      child: CustomButton(
-                        text: 'REGISTER NOW',
-                        textColor: Colors.white,
-                        backgroundColor: Colors.green,
-                        onPressed: () {
-                          GoRouter.of(context).push(AppRouter.kRegisterView);
-                        },
+      body: SafeArea(
+        child: BlocConsumer<AuthCubit, AuthState>(
+          listener: (context, state) {
+            if (state is AuthFailure) {
+              _showDialog('Login Failed', state.message);
+            } else if (state is AuthAuthenticated) {
+              context.go(AppRouter.kHomeView);
+            }
+          },
+          builder: (context, state) {
+            final isLoading = state is AuthLoading;
+
+            return SingleChildScrollView(
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 10),
+                child: Form(
+                  key: _formKey,
+                  child: Column(
+                    children: [
+                      const SizedBox(height: 150),
+                      const LoginHeader(),
+                      const SizedBox(height: 20),
+                      LoginForm(
+                        emailController: _emailController,
+                        passwordController: _passwordController,
                       ),
-                    ),
+                      const SizedBox(height: 40),
+                      LoginButtons(
+                        isLoading: isLoading,
+                        onLogin: _login,
+                        onGoogle: _signInWithGoogle,
+                        onRegister: _goToRegister,
+                      ),
+                    ],
                   ),
-                ],
+                ),
               ),
-            ),
-          );
-        },
+            );
+          },
+        ),
       ),
     );
   }

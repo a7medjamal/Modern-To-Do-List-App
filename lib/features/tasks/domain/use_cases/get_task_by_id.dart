@@ -8,9 +8,6 @@ class GetTaskById {
   GetTaskById(this.repository);
 
   Future<Task?> execute(String taskId) {
-    // Make sure this calls the implemented method in TaskRepositoryImpl
-    return repository.GetTaskById(
-      taskId,
-    ); // Changed from getTask to getTaskById
+    return repository.getTaskById(taskId);
   }
 }

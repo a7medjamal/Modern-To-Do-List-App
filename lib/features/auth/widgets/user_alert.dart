@@ -18,7 +18,6 @@ class UserAlertDialog {
           actions: <Widget>[
             TextButton(
               onPressed: () {
-                Navigator.of(context).pop();
                 onPressed();
               },
               child: Text(buttonText),

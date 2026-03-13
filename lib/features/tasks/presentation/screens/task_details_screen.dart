@@ -46,9 +46,7 @@ class _TaskDetailsScreenState extends State<TaskDetailsScreen> {
           _titleController.text = task.title;
           _descriptionController.text = task.description;
           _selectedCategory =
-              _categories.contains(task.category)
-                  ? task.category
-                  : 'Other'; // Handle if category is not in the list
+              _categories.contains(task.category) ? task.category : 'Other';
         });
       } else if (mounted) {
         _showErrorSnackbar('Task not found.');
@@ -148,8 +146,8 @@ class _TaskDetailsScreenState extends State<TaskDetailsScreen> {
           _isExistingTask ? 'Edit Task' : 'New Task',
           style: const TextStyle(color: Colors.white),
         ),
-        backgroundColor: const Color(0xFF242443), // Consistent AppBar color
-        elevation: 0, // Flat design
+        backgroundColor: const Color(0xFF242443),
+        elevation: 0,
       ),
       body: SafeArea(
         child:
@@ -157,16 +155,13 @@ class _TaskDetailsScreenState extends State<TaskDetailsScreen> {
                 ? const Center(child: CircularProgressIndicator())
                 : SingleChildScrollView(
                   child: Padding(
-                    padding: const EdgeInsets.all(20.0), // Use all padding
+                    padding: const EdgeInsets.all(20.0),
                     child: Form(
-                      // Wrap content in a Form
                       key: _formKey,
                       child: Column(
-                        crossAxisAlignment:
-                            CrossAxisAlignment.stretch, // Stretch buttons
+                        crossAxisAlignment: CrossAxisAlignment.stretch,
                         children: [
                           TextFormField(
-                            // Use TextFormField for validation
                             controller: _titleController,
                             style: const TextStyle(color: Colors.white),
                             decoration: _inputDecoration('Task Title'),
@@ -180,19 +175,16 @@ class _TaskDetailsScreenState extends State<TaskDetailsScreen> {
                           const SizedBox(height: 16),
                           TextFormField(
                             controller: _descriptionController,
-                            maxLines: 4, // Increased maxLines
+                            maxLines: 4,
                             style: const TextStyle(color: Colors.white),
                             decoration: _inputDecoration(
                               'Description (Optional)',
                             ),
-                            // Description can be optional, so no validator needed unless required
                           ),
                           const SizedBox(height: 16),
                           DropdownButtonFormField<String>(
                             value: _selectedCategory,
-                            dropdownColor: const Color(
-                              0xFF29214C,
-                            ), // Darker dropdown
+                            dropdownColor: const Color(0xFF29214C),
                             items:
                                 _categories
                                     .map(
@@ -213,11 +205,8 @@ class _TaskDetailsScreenState extends State<TaskDetailsScreen> {
                               }
                             },
                             decoration: _inputDecoration('Category'),
-                            style: const TextStyle(
-                              color: Colors.white,
-                            ), // Style for selected item
-                            iconEnabledColor:
-                                Colors.white70, // Dropdown arrow color
+                            style: const TextStyle(color: Colors.white),
+                            iconEnabledColor: Colors.white70,
                           ),
                           const SizedBox(height: 30),
                           ElevatedButton(
@@ -234,8 +223,7 @@ class _TaskDetailsScreenState extends State<TaskDetailsScreen> {
                             ElevatedButton(
                               onPressed: _deleteTask,
                               style: ElevatedButton.styleFrom(
-                                backgroundColor:
-                                    Colors.redAccent, // More distinct red
+                                backgroundColor: Colors.redAccent,
                                 padding: const EdgeInsets.symmetric(
                                   vertical: 15,
                                 ),
@@ -260,9 +248,7 @@ class _TaskDetailsScreenState extends State<TaskDetailsScreen> {
         borderSide: BorderSide(color: Colors.white54),
       ),
       focusedBorder: const UnderlineInputBorder(
-        borderSide: BorderSide(
-          color: Colors.deepPurpleAccent,
-        ), // Highlight color on focus
+        borderSide: BorderSide(color: Colors.deepPurpleAccent),
       ),
       errorBorder: const UnderlineInputBorder(
         borderSide: BorderSide(color: Colors.redAccent),
@@ -270,8 +256,6 @@ class _TaskDetailsScreenState extends State<TaskDetailsScreen> {
       focusedErrorBorder: const UnderlineInputBorder(
         borderSide: BorderSide(color: Colors.redAccent, width: 2),
       ),
-      // Add content padding if needed
-      // contentPadding: EdgeInsets.symmetric(vertical: 10.0),
     );
   }
 

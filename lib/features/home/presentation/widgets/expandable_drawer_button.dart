@@ -4,11 +4,13 @@ import 'package:flutter_svg/flutter_svg.dart';
 class ExpandableDrawerButton extends StatefulWidget {
   final String label;
   final List<Widget> children;
+  final bool initiallyExpanded;
 
   const ExpandableDrawerButton({
     super.key,
     required this.label,
-    required this.children, required bool initiallyExpanded,
+    required this.children,
+    this.initiallyExpanded = false,
   });
 
   @override
@@ -16,7 +18,13 @@ class ExpandableDrawerButton extends StatefulWidget {
 }
 
 class _ExpandableDrawerButtonState extends State<ExpandableDrawerButton> {
-  bool _isExpanded = false;
+  late bool _isExpanded;
+
+  @override
+  void initState() {
+    super.initState();
+    _isExpanded = widget.initiallyExpanded; // ← now actually used
+  }
 
   void _toggleExpand() {
     setState(() {
@@ -24,7 +32,6 @@ class _ExpandableDrawerButtonState extends State<ExpandableDrawerButton> {
     });
   }
 
-  @override
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -46,18 +53,13 @@ class _ExpandableDrawerButtonState extends State<ExpandableDrawerButton> {
                 widget.label,
                 style: const TextStyle(color: Colors.white, fontSize: 16),
               ),
-              trailing:
-                  _isExpanded
-                      ? SvgPicture.asset(
-                        'assets/icons/show_less_details_icon.svg',
-                        width: 24,
-                        height: 24,
-                      )
-                      : SvgPicture.asset(
-                        'assets/icons/show_more_details_icon.svg',
-                        width: 24,
-                        height: 24,
-                      ),
+              trailing: SvgPicture.asset(
+                _isExpanded
+                    ? 'assets/icons/show_less_details_icon.svg'
+                    : 'assets/icons/show_more_details_icon.svg',
+                width: 24,
+                height: 24,
+              ),
               onTap: _toggleExpand,
             ),
           ),

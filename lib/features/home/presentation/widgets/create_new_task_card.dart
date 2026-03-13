@@ -58,7 +58,10 @@ class CreateNewTaskCard extends StatelessWidget {
                       onPressed: () {},
                       icon: SvgPicture.asset(
                         'assets/icons/add_icon.svg',
-                        color: Colors.white,
+                        colorFilter: const ColorFilter.mode(
+                          Colors.white,
+                          BlendMode.srcIn,
+                        ),
                       ),
                     ),
                   ),

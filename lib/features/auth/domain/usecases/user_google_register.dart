@@ -1,4 +1,4 @@
-import 'package:cat_to_do_list/features/auth/data/repositories/auth_repository_interface.dart';
+import 'package:cat_to_do_list/features/auth/domain/repositories/auth_repo.dart';
 
 class SignInWithGoogle {
   final AuthRepository repository;
