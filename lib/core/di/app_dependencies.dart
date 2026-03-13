@@ -1,8 +1,8 @@
 import 'package:cat_to_do_list/features/auth/data/repositories/auth_repo_impl.dart';
 import 'package:cat_to_do_list/features/auth/domain/usecases/login_user.dart';
-import 'package:cat_to_do_list/features/auth/domain/usecases/signup_user.dart';
 import 'package:cat_to_do_list/features/auth/domain/usecases/send_email_verification.dart';
 import 'package:cat_to_do_list/features/auth/domain/usecases/send_password_reset.dart';
+import 'package:cat_to_do_list/features/auth/domain/usecases/signup_user.dart';
 import 'package:cat_to_do_list/features/auth/domain/usecases/user_google_register.dart';
 import 'package:cat_to_do_list/features/auth/domain/usecases/user_logout.dart';
 import 'package:cat_to_do_list/features/tasks/data/repositories/task_repository_impl.dart';
@@ -14,6 +14,10 @@ import 'package:cat_to_do_list/features/tasks/domain/use_cases/update_task.dart'
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class AppDependencies {
+  late final FirebaseFirestore firestore;
+  late final AuthRepositoryImpl authRepository;
+  late final TaskRepositoryImpl taskRepository;
+
   late final LoginUser loginUser;
   late final SignUpUser signUpUser;
   late final LogoutUser logoutUser;
@@ -28,9 +32,10 @@ class AppDependencies {
   late final GetTasks getTasks;
 
   AppDependencies() {
-    final authRepository = AuthRepositoryImpl();
-    final firestore = FirebaseFirestore.instance;
-    final taskRepository = TaskRepositoryImpl(firestore: firestore);
+    firestore = FirebaseFirestore.instance;
+
+    authRepository = AuthRepositoryImpl();
+    taskRepository = TaskRepositoryImpl(firestore: firestore);
 
     loginUser = LoginUser(authRepository);
     signUpUser = SignUpUser(authRepository);

@@ -10,6 +10,7 @@ class TaskDescriptionField extends StatelessWidget {
   Widget build(BuildContext context) {
     return TextFormField(
       controller: controller,
+      minLines: 1,
       maxLines: 4,
       style: const TextStyle(color: Colors.white),
       decoration: taskInputDecoration('Description (Optional)'),

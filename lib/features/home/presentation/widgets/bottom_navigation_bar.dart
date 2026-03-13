@@ -1,5 +1,5 @@
-import 'package:cat_to_do_list/core/app_router.dart';
-import 'package:cat_to_do_list/features/auth/presentation/cubit/auth_cubit.dart';
+import 'package:cat_to_do_list/core/routing/app_router.dart';
+import 'package:cat_to_do_list/features/auth/presentation/screens/cubit/auth/auth_cubit.dart';
 import 'package:cat_to_do_list/features/home/presentation/widgets/bottom_navigation_bar_item.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -37,7 +37,7 @@ class _BottomNavBarState extends State<BottomNavBar> {
   }
 
   void _showLogoutSheet() {
-    showModalBottomSheet(
+    showModalBottomSheet<void>(
       context: context,
       backgroundColor: Colors.transparent,
       shape: const RoundedRectangleBorder(
@@ -70,9 +70,6 @@ class _BottomNavBarState extends State<BottomNavBar> {
                 onPressed: () async {
                   Navigator.of(sheetContext).pop();
                   await context.read<AuthCubit>().logout();
-                  if (mounted) {
-                    context.go(AppRouter.kLoginView);
-                  }
                 },
                 child: const Text('Log Out'),
               ),

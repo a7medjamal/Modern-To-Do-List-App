@@ -1,4 +1,4 @@
-import 'package:cat_to_do_list/core/app_router.dart';
+import 'package:cat_to_do_list/core/routing/app_router.dart';
 import 'package:cat_to_do_list/features/tasks/domain/entities/task.dart';
 import 'package:cat_to_do_list/features/tasks/presentation/cubit/task_cubit.dart';
 import 'package:flutter/material.dart';

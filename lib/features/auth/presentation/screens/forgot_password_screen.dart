@@ -1,8 +1,8 @@
-import 'package:cat_to_do_list/features/auth/presentation/cubit/auth_cubit.dart';
-import 'package:cat_to_do_list/features/auth/presentation/cubit/auth_state.dart';
-import 'package:cat_to_do_list/features/auth/widgets/custom_button.dart';
-import 'package:cat_to_do_list/features/auth/widgets/custom_text_field.dart';
-import 'package:cat_to_do_list/features/auth/widgets/user_alert.dart';
+import 'package:cat_to_do_list/core/widgets/user_alert_dialog.dart';
+import 'package:cat_to_do_list/features/auth/presentation/screens/cubit/reset_password/reset_password_cubit.dart';
+import 'package:cat_to_do_list/features/auth/presentation/screens/cubit/reset_password/reset_password_state.dart';
+import 'package:cat_to_do_list/features/auth/presentation/widgets/custom_button.dart';
+import 'package:cat_to_do_list/features/auth/presentation/widgets/custom_text_field.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
@@ -24,20 +24,10 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
     super.dispose();
   }
 
-  void _showDialog(String title, String content, VoidCallback onPressed) {
-    UserAlertDialog.show(
-      context: context,
-      title: title,
-      content: content,
-      buttonText: 'OK',
-      onPressed: onPressed,
-    );
-  }
-
   void _resetPassword() {
     if (!_formKey.currentState!.validate()) return;
 
-    context.read<AuthCubit>().resetPassword(
+    context.read<ResetPasswordCubit>().resetPassword(
       _emailController.text.trim(),
     );
   }
@@ -46,21 +36,29 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Forgot Password', style: TextStyle(color: Colors.white)),
+        title: const Text(
+          'Forgot Password',
+          style: TextStyle(color: Colors.white),
+        ),
         backgroundColor: Colors.transparent,
         elevation: 0,
         iconTheme: const IconThemeData(color: Colors.white),
       ),
       body: SafeArea(
-        child: BlocConsumer<AuthCubit, AuthState>(
+        child: BlocConsumer<ResetPasswordCubit, ResetPasswordState>(
           listener: (context, state) {
-            if (state is AuthFailure) {
-              _showDialog('Reset Failed', state.message, () => context.pop());
-            } else if (state is AuthInitial) {
-              _showDialog(
-                'Email Sent',
-                'If an account with that email exists, a password reset link has been sent.',
-                () {
+            if (state is ResetPasswordFailure) {
+              UserAlertDialog(
+                title: 'Reset Failed',
+                message: state.message,
+                onPressed: () => context.pop(),
+              );
+            } else if (state is ResetPasswordSuccess) {
+              UserAlertDialog(
+                title: 'Email Sent',
+                message:
+                    'If an account with that email exists, a password reset link has been sent.',
+                onPressed: () {
                   context.pop();
                   context.pop();
                 },
@@ -68,7 +66,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
             }
           },
           builder: (context, state) {
-            final isLoading = state is AuthLoading;
+            final isLoading = state is ResetPasswordLoading;
 
             return SingleChildScrollView(
               child: Padding(
@@ -91,10 +89,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                       const SizedBox(height: 20),
                       const Text(
                         'Enter your email address to receive a password reset link.',
-                        style: TextStyle(
-                          color: Colors.grey,
-                          fontSize: 16,
-                        ),
+                        style: TextStyle(color: Colors.grey, fontSize: 16),
                         textAlign: TextAlign.center,
                       ),
                       const SizedBox(height: 50),
@@ -106,7 +101,9 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                           if (value == null || value.trim().isEmpty) {
                             return 'Email is required';
                           }
-                          final emailRegex = RegExp(r'^[^@\s]+@[^@\s]+\.[^@\s]+$');
+                          final emailRegex = RegExp(
+                            r'^[^@\s]+@[^@\s]+\.[^@\s]+$',
+                          );
                           if (!emailRegex.hasMatch(value.trim())) {
                             return 'Enter a valid email';
                           }

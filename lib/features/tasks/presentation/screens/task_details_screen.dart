@@ -1,6 +1,6 @@
 import 'package:cat_to_do_list/features/tasks/domain/entities/task.dart';
 import 'package:cat_to_do_list/features/tasks/presentation/cubit/task_cubit.dart';
-import 'package:cat_to_do_list/features/tasks/presentation/widgets/task_details._form.dart';
+import 'package:cat_to_do_list/features/tasks/presentation/widgets/task_details_form.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
@@ -18,12 +18,14 @@ class TaskDetailsScreen extends StatefulWidget {
 class _TaskDetailsScreenState extends State<TaskDetailsScreen> {
   final _titleController = TextEditingController();
   final _descriptionController = TextEditingController();
+  final _subTaskController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
   final _uuid = const Uuid();
 
   final List<String> _categories = ['Personal', 'Work', 'Shopping', 'Other'];
-  String _selectedCategory = 'Personal';
+  final List<String> _subTasks = [];
 
+  String _selectedCategory = 'Personal';
   bool _isLoading = false;
   late final bool _isExistingTask;
   Task? _initialTaskData;
@@ -58,14 +60,38 @@ class _TaskDetailsScreenState extends State<TaskDetailsScreen> {
         _descriptionController.text = task.description;
         _selectedCategory =
             _categories.contains(task.category) ? task.category : 'Other';
+
+        _subTasks.clear();
+
+        _subTasks.addAll(List<String>.from(task.subTasks));
       });
     } catch (e) {
       if (mounted) {
         _showErrorSnackbar('Error loading task: $e');
       }
     } finally {
-      if (mounted) setState(() => _isLoading = false);
+      if (mounted) {
+        setState(() => _isLoading = false);
+      }
     }
+  }
+
+  void _addSubTask() {
+    final text = _subTaskController.text.trim();
+    if (text.isEmpty) return;
+
+    setState(() {
+      _subTasks.add(text);
+      _subTaskController.clear();
+    });
+  }
+
+  void _removeSubTask(int index) {
+    if (index < 0 || index >= _subTasks.length) return;
+
+    setState(() {
+      _subTasks.removeAt(index);
+    });
   }
 
   Future<void> _saveTask() async {
@@ -80,6 +106,7 @@ class _TaskDetailsScreenState extends State<TaskDetailsScreen> {
       category: _selectedCategory,
       isCompleted: _initialTaskData?.isCompleted ?? false,
       timestamp: _initialTaskData?.timestamp ?? DateTime.now(),
+      subTasks: List<String>.from(_subTasks),
     );
 
     try {
@@ -91,13 +118,17 @@ class _TaskDetailsScreenState extends State<TaskDetailsScreen> {
         await cubit.addTask(task);
       }
 
-      if (mounted) GoRouter.of(context).pop();
+      if (mounted) {
+        GoRouter.of(context).pop();
+      }
     } catch (e) {
       if (mounted) {
         _showErrorSnackbar('Error saving task: $e');
       }
     } finally {
-      if (mounted) setState(() => _isLoading = false);
+      if (mounted) {
+        setState(() => _isLoading = false);
+      }
     }
   }
 
@@ -106,24 +137,22 @@ class _TaskDetailsScreenState extends State<TaskDetailsScreen> {
 
     final confirm = await showDialog<bool>(
       context: context,
-      builder:
-          (_) => AlertDialog(
-            title: const Text('Delete Task?'),
-            content: const Text('Are you sure you want to delete this task?'),
-            actions: [
-              TextButton(
-                onPressed: () => Navigator.pop(context, false),
-                child: const Text('Cancel'),
-              ),
-              TextButton(
-                onPressed: () => Navigator.pop(context, true),
-                child: const Text(
-                  'Delete',
-                  style: TextStyle(color: Colors.red),
-                ),
-              ),
-            ],
-          ),
+      builder: (dialogContext) {
+        return AlertDialog(
+          title: const Text('Delete Task?'),
+          content: const Text('Are you sure you want to delete this task?'),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.of(dialogContext).pop(false),
+              child: const Text('Cancel'),
+            ),
+            TextButton(
+              onPressed: () => Navigator.of(dialogContext).pop(true),
+              child: const Text('Delete', style: TextStyle(color: Colors.red)),
+            ),
+          ],
+        );
+      },
     );
 
     if (confirm != true) return;
@@ -132,13 +161,18 @@ class _TaskDetailsScreenState extends State<TaskDetailsScreen> {
 
     try {
       await context.read<TaskCubit>().deleteTask(widget.taskId!);
-      if (mounted) GoRouter.of(context).pop();
+
+      if (mounted) {
+        GoRouter.of(context).pop();
+      }
     } catch (e) {
       if (mounted) {
         _showErrorSnackbar('Error deleting task: $e');
       }
     } finally {
-      if (mounted) setState(() => _isLoading = false);
+      if (mounted) {
+        setState(() => _isLoading = false);
+      }
     }
   }
 
@@ -168,12 +202,16 @@ class _TaskDetailsScreenState extends State<TaskDetailsScreen> {
                 formKey: _formKey,
                 titleController: _titleController,
                 descriptionController: _descriptionController,
+                subTaskController: _subTaskController,
                 selectedCategory: _selectedCategory,
                 categories: _categories,
+                subTasks: _subTasks,
                 isExistingTask: _isExistingTask,
                 onCategoryChanged: (value) {
                   setState(() => _selectedCategory = value);
                 },
+                onAddSubTask: _addSubTask,
+                onRemoveSubTask: _removeSubTask,
                 onSave: _saveTask,
                 onDelete: _deleteTask,
               ),
@@ -184,6 +222,7 @@ class _TaskDetailsScreenState extends State<TaskDetailsScreen> {
   void dispose() {
     _titleController.dispose();
     _descriptionController.dispose();
+    _subTaskController.dispose();
     super.dispose();
   }
 }

@@ -1,5 +1,5 @@
-import 'package:cat_to_do_list/core/app_router.dart';
-import 'package:cat_to_do_list/core/utils/widgets/custom_app_bar.dart';
+import 'package:cat_to_do_list/core/routing/app_router.dart';
+import 'package:cat_to_do_list/core/widgets/custom_app_bar.dart';
 import 'package:cat_to_do_list/features/home/presentation/widgets/bottom_navigation_bar.dart';
 import 'package:cat_to_do_list/features/home/presentation/widgets/create_new_task_button.dart';
 import 'package:cat_to_do_list/features/home/presentation/widgets/home_body.dart';

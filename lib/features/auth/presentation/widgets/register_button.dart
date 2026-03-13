@@ -1,4 +1,4 @@
-import 'package:cat_to_do_list/features/auth/widgets/custom_button.dart';
+import 'package:cat_to_do_list/features/auth/presentation/widgets/custom_button.dart';
 import 'package:flutter/material.dart';
 
 class RegisterButtonSection extends StatelessWidget {

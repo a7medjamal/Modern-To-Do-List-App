@@ -8,6 +8,7 @@ class TaskModel {
   final String category;
   final bool isCompleted;
   final DateTime timestamp;
+  final List<String> subTasks;
 
   TaskModel({
     required this.id,
@@ -16,6 +17,7 @@ class TaskModel {
     required this.category,
     required this.isCompleted,
     required this.timestamp,
+    required this.subTasks,
   });
 
   Task toEntity() {
@@ -26,6 +28,7 @@ class TaskModel {
       category: category,
       isCompleted: isCompleted,
       timestamp: timestamp,
+      subTasks: subTasks,
     );
   }
 
@@ -33,7 +36,7 @@ class TaskModel {
     final String id = documentId ?? map['id'] ?? '';
 
     if (map['title'] == null) {
-      throw FormatException('Task title is required');
+      throw const FormatException('Task title is required');
     }
 
     return TaskModel(
@@ -43,6 +46,7 @@ class TaskModel {
       category: map['category'] as String? ?? 'Uncategorized',
       isCompleted: map['isCompleted'] as bool? ?? false,
       timestamp: _parseTimestamp(map['timestamp']),
+      subTasks: _parseSubTasks(map['subTasks']),
     );
   }
 
@@ -59,6 +63,16 @@ class TaskModel {
     return DateTime.now();
   }
 
+  static List<String> _parseSubTasks(dynamic value) {
+    if (value == null) return [];
+
+    if (value is List) {
+      return value.map((e) => e.toString()).toList();
+    }
+
+    return [];
+  }
+
   factory TaskModel.fromEntity(Task task) {
     return TaskModel(
       id: task.id,
@@ -67,6 +81,7 @@ class TaskModel {
       category: task.category,
       isCompleted: task.isCompleted,
       timestamp: task.timestamp,
+      subTasks: List<String>.from(task.subTasks),
     );
   }
 
@@ -77,6 +92,7 @@ class TaskModel {
       'category': category,
       'isCompleted': isCompleted,
       'timestamp': Timestamp.fromDate(timestamp),
+      'subTasks': subTasks,
     };
   }
 }

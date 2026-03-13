@@ -1,6 +1,6 @@
-import 'package:cat_to_do_list/core/app_router.dart';
+import 'package:cat_to_do_list/core/routing/app_router.dart';
 import 'package:cat_to_do_list/core/utils/validators.dart';
-import 'package:cat_to_do_list/features/auth/widgets/custom_text_field.dart';
+import 'package:cat_to_do_list/features/auth/presentation/widgets/custom_text_field.dart';
 import 'package:flutter/material.dart';
 
 class LoginForm extends StatelessWidget {
