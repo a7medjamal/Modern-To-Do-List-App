@@ -61,4 +61,17 @@ class AuthRepositoryImpl implements AuthRepository {
       throw Exception('Google Sign-In failed: $e');
     }
   }
+
+  @override
+  Future<void> sendEmailVerification() async {
+    final user = _auth.currentUser;
+    if (user != null && !user.emailVerified) {
+      await user.sendEmailVerification();
+    }
+  }
+
+  @override
+  Future<void> sendPasswordResetEmail(String email) async {
+    await _auth.sendPasswordResetEmail(email: email);
+  }
 }

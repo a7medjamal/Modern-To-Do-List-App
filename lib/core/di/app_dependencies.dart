@@ -1,6 +1,8 @@
 import 'package:cat_to_do_list/features/auth/data/repositories/auth_repo_impl.dart';
 import 'package:cat_to_do_list/features/auth/domain/usecases/login_user.dart';
 import 'package:cat_to_do_list/features/auth/domain/usecases/signup_user.dart';
+import 'package:cat_to_do_list/features/auth/domain/usecases/send_email_verification.dart';
+import 'package:cat_to_do_list/features/auth/domain/usecases/send_password_reset.dart';
 import 'package:cat_to_do_list/features/auth/domain/usecases/user_google_register.dart';
 import 'package:cat_to_do_list/features/auth/domain/usecases/user_logout.dart';
 import 'package:cat_to_do_list/features/tasks/data/repositories/task_repository_impl.dart';
@@ -16,6 +18,8 @@ class AppDependencies {
   late final SignUpUser signUpUser;
   late final LogoutUser logoutUser;
   late final SignInWithGoogle signInWithGoogle;
+  late final SendEmailVerification sendEmailVerification;
+  late final SendPasswordResetEmail sendPasswordResetEmail;
 
   late final AddTask addTask;
   late final UpdateTask updateTask;
@@ -32,6 +36,8 @@ class AppDependencies {
     signUpUser = SignUpUser(authRepository);
     logoutUser = LogoutUser(authRepository);
     signInWithGoogle = SignInWithGoogle(authRepository);
+    sendEmailVerification = SendEmailVerification(authRepository);
+    sendPasswordResetEmail = SendPasswordResetEmail(authRepository);
 
     addTask = AddTask(taskRepository);
     updateTask = UpdateTask(taskRepository);

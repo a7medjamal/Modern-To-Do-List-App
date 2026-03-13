@@ -1,5 +1,7 @@
 import 'package:cat_to_do_list/features/auth/domain/usecases/login_user.dart';
 import 'package:cat_to_do_list/features/auth/domain/usecases/signup_user.dart';
+import 'package:cat_to_do_list/features/auth/domain/usecases/send_email_verification.dart';
+import 'package:cat_to_do_list/features/auth/domain/usecases/send_password_reset.dart';
 import 'package:cat_to_do_list/features/auth/domain/usecases/user_google_register.dart';
 import 'package:cat_to_do_list/features/auth/domain/usecases/user_logout.dart';
 import 'package:cat_to_do_list/features/auth/presentation/cubit/auth_state.dart';
@@ -11,12 +13,16 @@ class AuthCubit extends Cubit<AuthState> {
   final SignUpUser signUpUser;
   final LogoutUser logoutUser;
   final SignInWithGoogle signInWithGoogle;
+  final SendEmailVerification sendEmailVerification;
+  final SendPasswordResetEmail sendPasswordResetEmail;
 
   AuthCubit({
     required this.loginUser,
     required this.signUpUser,
     required this.logoutUser,
     required this.signInWithGoogle,
+    required this.sendEmailVerification,
+    required this.sendPasswordResetEmail,
   }) : super(const AuthInitial());
 
   Future<void> login(String email, String password) async {
@@ -24,7 +30,13 @@ class AuthCubit extends Cubit<AuthState> {
 
     try {
       await loginUser(email, password);
-      emit(const AuthAuthenticated());
+      
+      final user = FirebaseAuth.instance.currentUser;
+      if (user != null && !user.emailVerified) {
+        emit(const AuthFailure('Please verify your email to log in.'));
+      } else {
+        emit(const AuthAuthenticated());
+      }
     } catch (e) {
       emit(AuthFailure(_mapErrorMessage(e)));
     }
@@ -35,7 +47,8 @@ class AuthCubit extends Cubit<AuthState> {
 
     try {
       await signUpUser(email, password);
-      emit(const AuthAuthenticated());
+      await sendEmailVerification();
+      emit(const AuthAuthenticated()); // Sign up creates session but we might want them to log in again, or we can just send the verification and let them know.
     } catch (e) {
       emit(AuthFailure(_mapErrorMessage(e)));
     }
@@ -65,6 +78,17 @@ class AuthCubit extends Cubit<AuthState> {
     try {
       await logoutUser();
       emit(const AuthUnauthenticated());
+    } catch (e) {
+      emit(AuthFailure(_mapErrorMessage(e)));
+    }
+  }
+
+  Future<void> resetPassword(String email) async {
+    emit(const AuthLoading());
+
+    try {
+      await sendPasswordResetEmail(email);
+      emit(const AuthInitial()); // Reset to initial state or you can create a specific state if needed. But initial works to stop loading.
     } catch (e) {
       emit(AuthFailure(_mapErrorMessage(e)));
     }

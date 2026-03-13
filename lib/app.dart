@@ -21,6 +21,8 @@ class ToDoApp extends StatelessWidget {
                 signUpUser: dependencies.signUpUser,
                 logoutUser: dependencies.logoutUser,
                 signInWithGoogle: dependencies.signInWithGoogle,
+                sendEmailVerification: dependencies.sendEmailVerification,
+                sendPasswordResetEmail: dependencies.sendPasswordResetEmail,
               ),
         ),
         BlocProvider(

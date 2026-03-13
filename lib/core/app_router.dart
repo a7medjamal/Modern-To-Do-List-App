@@ -1,3 +1,4 @@
+import 'package:cat_to_do_list/features/auth/presentation/screens/forgot_password_screen.dart';
 import 'package:cat_to_do_list/features/auth/presentation/screens/login_screen.dart';
 import 'package:cat_to_do_list/features/auth/presentation/screens/register_screen.dart';
 import 'package:cat_to_do_list/features/home/presentation/home_screen.dart';
@@ -9,6 +10,7 @@ class AppRouter {
   static const String kHomeView = '/home';
   static const String kLoginView = '/';
   static const String kRegisterView = '/register';
+  static const String kForgotPasswordView = '/forgot-password';
   // Define route patterns
   static const String kTaskDetailsBasePath = '/taskDetails';
   static const String kNewTaskPath =
@@ -24,6 +26,10 @@ class AppRouter {
       GoRoute(
         path: kRegisterView,
         builder: (context, state) => const RegisterScreen(),
+      ),
+      GoRoute(
+        path: kForgotPasswordView,
+        builder: (context, state) => const ForgotPasswordScreen(),
       ),
       // Route for adding a new task (no ID)
       GoRoute(
@@ -51,6 +57,7 @@ class AppRouter {
   static void goToHome(BuildContext context) => context.go(kHomeView);
   static void goToLogin(BuildContext context) => context.go(kLoginView);
   static void goToRegister(BuildContext context) => context.go(kRegisterView);
+  static void goToForgotPassword(BuildContext context) => context.push(kForgotPasswordView);
   static void goToNewTask(BuildContext context) =>
       context.push(kNewTaskPath); // Use push to add to stack
   static void goToEditTask(BuildContext context, String taskId) =>

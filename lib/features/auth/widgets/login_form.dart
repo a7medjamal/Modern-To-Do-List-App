@@ -1,3 +1,4 @@
+import 'package:cat_to_do_list/core/app_router.dart';
 import 'package:cat_to_do_list/features/auth/widgets/custom_text_field.dart';
 import 'package:flutter/material.dart';
 
@@ -53,6 +54,19 @@ class LoginForm extends StatelessWidget {
           hintText: 'Password',
           obscureText: true,
           validator: _validatePassword,
+        ),
+        Align(
+          alignment: Alignment.centerRight,
+          child: TextButton(
+            onPressed: () => AppRouter.goToForgotPassword(context),
+            child: const Text(
+              'Forgot Password?',
+              style: TextStyle(
+                color: Colors.grey,
+                fontSize: 14,
+              ),
+            ),
+          ),
         ),
       ],
     );

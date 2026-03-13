@@ -106,7 +106,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
           } else if (state is AuthAuthenticated) {
             _showDialog(
               title: 'Success',
-              content: 'Registered successfully!\nLogin now!',
+              content: 'Registered successfully!\nPlease check your email to verify your account before logging in.',
               onPressed: () => context.go(AppRouter.kLoginView),
             );
           }
