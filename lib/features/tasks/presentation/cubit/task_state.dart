@@ -1,4 +1,3 @@
-// lib/features/tasks/presentation/screens/cubit/task_state.dart
 import 'package:cat_to_do_list/features/tasks/domain/entities/task.dart';
 import 'package:equatable/equatable.dart';
 

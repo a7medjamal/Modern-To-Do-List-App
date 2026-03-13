@@ -1,4 +1,3 @@
-// lib/features/tasks/presentation/screens/cubit/task_cubit.dart
 import 'dart:async';
 import 'package:bloc/bloc.dart';
 import 'package:cat_to_do_list/core/errors/task_exception.dart';
@@ -8,7 +7,7 @@ import 'package:cat_to_do_list/features/tasks/domain/use_cases/delete_task.dart'
 import 'package:cat_to_do_list/features/tasks/domain/use_cases/get_task_by_id.dart';
 import 'package:cat_to_do_list/features/tasks/domain/use_cases/get_tasks.dart';
 import 'package:cat_to_do_list/features/tasks/domain/use_cases/update_task.dart';
-import 'package:cat_to_do_list/features/tasks/presentation/screens/cubit/task_state.dart';
+import 'package:cat_to_do_list/features/tasks/presentation/cubit/task_state.dart';
 import 'package:flutter/foundation.dart';
 
 class TaskCubit extends Cubit<TaskState> {
@@ -125,7 +124,6 @@ class TaskCubit extends Cubit<TaskState> {
     try {
       return await _getTaskById.execute(taskId);
     } catch (e) {
-      // Log error but don't change global task list state
       debugPrint('Error fetching task by ID: $e');
       return null;
     }

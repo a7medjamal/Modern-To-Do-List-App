@@ -61,8 +61,8 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                 'Email Sent',
                 'If an account with that email exists, a password reset link has been sent.',
                 () {
-                  context.pop(); // Close dialog
-                  context.pop(); // Go back to login
+                  context.pop();
+                  context.pop();
                 },
               );
             }

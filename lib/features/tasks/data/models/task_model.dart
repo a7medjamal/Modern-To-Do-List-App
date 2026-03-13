@@ -1,4 +1,3 @@
-// lib/features/tasks/data/models/task_model.dart
 import 'package:cat_to_do_list/features/tasks/domain/entities/task.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
@@ -19,7 +18,6 @@ class TaskModel {
     required this.timestamp,
   });
 
-  // Convert TaskModel to Task (Entity)
   Task toEntity() {
     return Task(
       id: id,
@@ -31,12 +29,9 @@ class TaskModel {
     );
   }
 
-  // Convert Map (from Firestore) to TaskModel
   factory TaskModel.fromMap(Map<String, dynamic> map, {String? documentId}) {
-    // Use documentId if provided, otherwise try to get from map
     final String id = documentId ?? map['id'] ?? '';
 
-    // Validate required fields
     if (map['title'] == null) {
       throw FormatException('Task title is required');
     }
@@ -51,7 +46,6 @@ class TaskModel {
     );
   }
 
-  // Helper method to parse timestamp
   static DateTime _parseTimestamp(dynamic value) {
     if (value == null) return DateTime.now();
 
@@ -62,10 +56,9 @@ class TaskModel {
       if (parsed != null) return parsed;
     }
 
-    return DateTime.now(); // Fallback
+    return DateTime.now();
   }
 
-  // Convert Task (Entity) to TaskModel
   factory TaskModel.fromEntity(Task task) {
     return TaskModel(
       id: task.id,
@@ -77,13 +70,8 @@ class TaskModel {
     );
   }
 
-  // Convert TaskModel to Map (for Firestore)
   Map<String, dynamic> toMap() {
-    // DO NOT include the ID here if you are using doc(id).set() or doc(id).update()
-    // Firestore manages the document ID separately from its data fields.
-    // Including it can sometimes cause issues or redundancy.
     return {
-      // 'id': id, // Usually omitted when writing to Firestore
       'title': title,
       'description': description,
       'category': category,

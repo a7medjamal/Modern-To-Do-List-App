@@ -1,4 +1,4 @@
-// ignore_for_file: use_build_context_synchronously
+
 import 'package:cat_to_do_list/core/app_router.dart';
 import 'package:cat_to_do_list/features/auth/widgets/user_alert.dart';
 import 'package:firebase_auth/firebase_auth.dart';

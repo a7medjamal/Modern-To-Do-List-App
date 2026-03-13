@@ -1,4 +1,4 @@
-// lib/features/tasks/data/repositories/task_repository_impl.dart
+
 
 import 'package:cat_to_do_list/core/errors/task_exception.dart';
 import 'package:cat_to_do_list/core/utils/auth_helper.dart';
@@ -13,7 +13,6 @@ class TaskRepositoryImpl implements TaskRepository {
 
   TaskRepositoryImpl({required this.firestore});
 
-  /// Returns the Firestore tasks collection for the signed-in user.
   CollectionReference _tasksCollection(String uid) =>
       firestore.collection('users').doc(uid).collection('tasks');
 

@@ -1,7 +1,6 @@
-// lib/features/tasks/domain/entities/task.dart
-import 'package:equatable/equatable.dart'; // Import equatable
+import 'package:equatable/equatable.dart';
 
-class Task extends Equatable { // Extend Equatable for easier comparison
+class Task extends Equatable {
   final String id;
   final String title;
   final String description;
@@ -9,7 +8,7 @@ class Task extends Equatable { // Extend Equatable for easier comparison
   final bool isCompleted;
   final DateTime timestamp;
 
-  const Task({ // Make constructor const
+  const Task({
     required this.id,
     required this.title,
     required this.description,
@@ -18,8 +17,6 @@ class Task extends Equatable { // Extend Equatable for easier comparison
     required this.timestamp,
   });
 
-  // Add copyWith method (implementation moved to extension in repository file for simplicity here)
-  // Or define it directly here if preferred
    Task copyWith({
     String? id,
     String? title,

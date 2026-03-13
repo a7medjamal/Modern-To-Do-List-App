@@ -27,13 +27,11 @@ class _BottomNavBarState extends State<BottomNavBar> {
 
     switch (index) {
       case 0:
-        // go to menu screen when available
         break;
       case 1:
         context.go(AppRouter.kHomeView);
         break;
       case 2:
-        // go to calendar screen when available
         break;
     }
   }

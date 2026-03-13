@@ -1,4 +1,5 @@
 import 'package:cat_to_do_list/core/app_router.dart';
+import 'package:cat_to_do_list/core/utils/validators.dart';
 import 'package:cat_to_do_list/features/auth/presentation/cubit/auth_cubit.dart';
 import 'package:cat_to_do_list/features/auth/presentation/cubit/auth_state.dart';
 import 'package:cat_to_do_list/features/auth/widgets/register_button.dart';
@@ -46,30 +47,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
     );
   }
 
-  String? _validateEmail(String? value) {
-    if (value == null || value.trim().isEmpty) {
-      return 'Email is required';
-    }
 
-    final emailRegex = RegExp(r'^[^@\s]+@[^@\s]+\.[^@\s]+$');
-    if (!emailRegex.hasMatch(value.trim())) {
-      return 'Enter a valid email';
-    }
-
-    return null;
-  }
-
-  String? _validatePassword(String? value) {
-    if (value == null || value.trim().isEmpty) {
-      return 'Password is required';
-    }
-
-    if (value.trim().length < 6) {
-      return 'Password must be at least 6 characters';
-    }
-
-    return null;
-  }
 
   String? _validateConfirmPassword(String? value) {
     if (value == null || value.trim().isEmpty) {
@@ -129,8 +107,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
                         emailController: _emailController,
                         passwordController: _passwordController,
                         confirmPasswordController: _confirmPasswordController,
-                        validateEmail: _validateEmail,
-                        validatePassword: _validatePassword,
+                        validateEmail: Validators.validateEmail,
+                        validatePassword: Validators.validatePassword,
                         validateConfirmPassword: _validateConfirmPassword,
                       ),
                       const SizedBox(height: 30),

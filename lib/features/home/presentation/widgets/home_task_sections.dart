@@ -8,35 +8,45 @@ class HomeTaskSections extends StatelessWidget {
 
   final List<Task> tasks;
 
-  @override
-  Widget build(BuildContext context) {
+  List<Task> get _todayTasks {
     final now = DateTime.now();
     final today = DateTime(now.year, now.month, now.day);
     final tomorrow = today.add(const Duration(days: 1));
+    return tasks
+        .where(
+          (task) =>
+              !task.isCompleted &&
+              task.timestamp.isAfter(today) &&
+              task.timestamp.isBefore(tomorrow),
+        )
+        .toList();
+  }
 
-    final todayTasks =
-        tasks
-            .where(
-              (task) =>
-                  !task.isCompleted &&
-                  task.timestamp.isAfter(today) &&
-                  task.timestamp.isBefore(tomorrow),
-            )
-            .toList();
+  List<Task> get _previousTasks {
+    final now = DateTime.now();
+    final today = DateTime(now.year, now.month, now.day);
+    return tasks
+        .where((task) => !task.isCompleted && task.timestamp.isBefore(today))
+        .toList();
+  }
 
-    final previousTasks =
-        tasks
-            .where(
-              (task) => !task.isCompleted && task.timestamp.isBefore(today),
-            )
-            .toList();
+  List<Task> get _completedTasks =>
+      tasks.where((task) => task.isCompleted).toList();
 
-    final completedTasks = tasks.where((task) => task.isCompleted).toList();
-
-    final tasksByCategory = <String, List<Task>>{};
+  Map<String, List<Task>> get _tasksByCategory {
+    final map = <String, List<Task>>{};
     for (final task in tasks.where((task) => !task.isCompleted)) {
-      (tasksByCategory[task.category] ??= []).add(task);
+      (map[task.category] ??= []).add(task);
     }
+    return map;
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final todayTasks = _todayTasks;
+    final previousTasks = _previousTasks;
+    final completedTasks = _completedTasks;
+    final tasksByCategory = _tasksByCategory;
 
     return SingleChildScrollView(
       padding: const EdgeInsets.only(bottom: 120, left: 16, right: 16),

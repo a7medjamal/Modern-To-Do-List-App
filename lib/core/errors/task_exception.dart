@@ -1,4 +1,4 @@
-/// Exception thrown by the task repository layer.
+
 class TaskRepositoryException implements Exception {
   final String message;
   final dynamic originalException;

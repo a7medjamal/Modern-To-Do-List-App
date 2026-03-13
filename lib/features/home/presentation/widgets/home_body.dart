@@ -1,8 +1,8 @@
 import 'package:cat_to_do_list/features/home/presentation/widgets/empty_tasks_view.dart';
 import 'package:cat_to_do_list/features/home/presentation/widgets/home_task_sections.dart';
 import 'package:cat_to_do_list/features/home/presentation/widgets/task_error_view.dart';
-import 'package:cat_to_do_list/features/tasks/presentation/screens/cubit/task_cubit.dart';
-import 'package:cat_to_do_list/features/tasks/presentation/screens/cubit/task_state.dart';
+import 'package:cat_to_do_list/features/tasks/presentation/cubit/task_cubit.dart';
+import 'package:cat_to_do_list/features/tasks/presentation/cubit/task_state.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 

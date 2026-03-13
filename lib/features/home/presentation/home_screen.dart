@@ -3,7 +3,7 @@ import 'package:cat_to_do_list/core/utils/widgets/custom_app_bar.dart';
 import 'package:cat_to_do_list/features/home/presentation/widgets/bottom_navigation_bar.dart';
 import 'package:cat_to_do_list/features/home/presentation/widgets/create_new_task_button.dart';
 import 'package:cat_to_do_list/features/home/presentation/widgets/home_body.dart';
-import 'package:cat_to_do_list/features/tasks/presentation/screens/cubit/task_cubit.dart';
+import 'package:cat_to_do_list/features/tasks/presentation/cubit/task_cubit.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';

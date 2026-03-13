@@ -48,7 +48,7 @@ class AuthCubit extends Cubit<AuthState> {
     try {
       await signUpUser(email, password);
       await sendEmailVerification();
-      emit(const AuthAuthenticated()); // Sign up creates session but we might want them to log in again, or we can just send the verification and let them know.
+      emit(const AuthAuthenticated());
     } catch (e) {
       emit(AuthFailure(_mapErrorMessage(e)));
     }
@@ -88,7 +88,7 @@ class AuthCubit extends Cubit<AuthState> {
 
     try {
       await sendPasswordResetEmail(email);
-      emit(const AuthInitial()); // Reset to initial state or you can create a specific state if needed. But initial works to stop loading.
+      emit(const AuthInitial());
     } catch (e) {
       emit(AuthFailure(_mapErrorMessage(e)));
     }
