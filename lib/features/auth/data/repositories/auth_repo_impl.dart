@@ -6,11 +6,9 @@ class AuthRepositoryImpl implements AuthRepository {
   final FirebaseAuth _auth;
   final GoogleSignIn _googleSignIn;
 
-  AuthRepositoryImpl({
-    FirebaseAuth? firebaseAuth,
-    GoogleSignIn? googleSignIn,
-  }) : _auth = firebaseAuth ?? FirebaseAuth.instance,
-       _googleSignIn = googleSignIn ?? GoogleSignIn();
+  AuthRepositoryImpl({FirebaseAuth? firebaseAuth, GoogleSignIn? googleSignIn})
+    : _auth = firebaseAuth ?? FirebaseAuth.instance,
+      _googleSignIn = googleSignIn ?? GoogleSignIn();
 
   @override
   Future<void> login({required String email, required String password}) async {

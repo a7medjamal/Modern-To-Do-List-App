@@ -16,10 +16,12 @@ class LoginListeners extends StatelessWidget {
     showDialog(
       context: context,
       builder:
-          (_) => UserAlertDialog(
+          (dialogContext) => UserAlertDialog(
             title: title,
             message: message,
-            onPressed: () => Navigator.pop(context),
+            onPressed: () {
+              Navigator.of(dialogContext, rootNavigator: true).pop();
+            },
           ),
     );
   }

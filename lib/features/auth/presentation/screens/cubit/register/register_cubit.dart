@@ -19,10 +19,15 @@ class RegisterCubit extends Cubit<RegisterState> {
     String password,
   ) async {
     emit(RegisterLoading());
+
     try {
       await _signUpUser(email, password);
       await _sendEmailVerification();
-      emit(RegisterSuccess());
+      emit(
+        RegisterSuccess(
+          'Registered successfully!\nPlease check your email to verify your account before logging in.',
+        ),
+      );
     } catch (e) {
       emit(RegisterFailure(e.toString()));
     }

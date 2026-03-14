@@ -1,5 +1,5 @@
 import 'package:cat_to_do_list/features/home/presentation/widgets/expandable_drawer_button.dart';
-import 'package:cat_to_do_list/features/home/presentation/widgets/task_tile.dart';
+import 'package:cat_to_do_list/features/home/presentation/widgets/task_tile/task_tile_list.dart';
 import 'package:cat_to_do_list/features/tasks/domain/entities/task.dart';
 import 'package:flutter/material.dart';
 

@@ -3,35 +3,41 @@ import 'package:cat_to_do_list/core/widgets/custom_app_bar.dart';
 import 'package:cat_to_do_list/features/home/presentation/widgets/bottom_navigation_bar.dart';
 import 'package:cat_to_do_list/features/home/presentation/widgets/create_new_task_button.dart';
 import 'package:cat_to_do_list/features/home/presentation/widgets/home_body.dart';
-import 'package:cat_to_do_list/features/tasks/presentation/cubit/task_cubit.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 
-class HomeScreen extends StatefulWidget {
+class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
 
-  @override
-  State<HomeScreen> createState() => _HomeScreenState();
-}
+  String _getUserName() {
+    final user = FirebaseAuth.instance.currentUser;
 
-class _HomeScreenState extends State<HomeScreen> {
-  @override
-  void initState() {
-    super.initState();
-    context.read<TaskCubit>().loadTasks();
+    final displayName = user?.displayName?.trim();
+    if (displayName != null && displayName.isNotEmpty) {
+      return displayName;
+    }
+
+    final email = user?.email?.trim();
+    if (email != null && email.isNotEmpty) {
+      return email;
+    }
+
+    return 'User';
   }
 
   @override
   Widget build(BuildContext context) {
-    final user = FirebaseAuth.instance.currentUser;
-    final userName =
-        user?.displayName?.trim().isNotEmpty == true
-            ? user!.displayName!
-            : user?.email ?? 'User';
+    final userName = _getUserName();
 
     return Scaffold(
       bottomNavigationBar: const BottomNavBar(),
+      floatingActionButton: Padding(
+        padding: const EdgeInsets.only(bottom: 65),
+        child: CreateNewTaskButton(
+          onPressed: () => AppRouter.goToNewTask(context),
+        ),
+      ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       body: SafeArea(
         child: Column(
           children: [
@@ -45,15 +51,6 @@ class _HomeScreenState extends State<HomeScreen> {
           ],
         ),
       ),
-      floatingActionButton: Padding(
-        padding: const EdgeInsets.only(bottom: 65),
-        child: CreateNewTaskButton(
-          onPressed: () {
-            AppRouter.goToNewTask(context);
-          },
-        ),
-      ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
     );
   }
 }

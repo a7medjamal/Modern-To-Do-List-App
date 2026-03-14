@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-class TitleField extends StatelessWidget {
-  const TitleField({super.key, required this.controller});
+class TaskTitleField extends StatelessWidget {
+  const TaskTitleField({super.key, required this.controller});
 
   final TextEditingController controller;
 

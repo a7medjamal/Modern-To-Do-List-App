@@ -16,7 +16,7 @@ import 'package:go_router/go_router.dart';
 
 class AppRouter {
   static const String kHomeView = '/home';
-  static const String kLoginView = '/';
+  static const String kLoginView = '/login';
   static const String kRegisterView = '/register';
   static const String kForgotPasswordView = '/forgot-password';
 
@@ -30,24 +30,7 @@ class AppRouter {
       refreshListenable: GoRouterRefreshStream(
         FirebaseAuth.instance.authStateChanges(),
       ),
-      redirect: (context, state) {
-        final user = FirebaseAuth.instance.currentUser;
 
-        final goingToAuthPages =
-            state.matchedLocation == kLoginView ||
-            state.matchedLocation == kRegisterView ||
-            state.matchedLocation == kForgotPasswordView;
-
-        if (user == null && !goingToAuthPages) {
-          return kLoginView;
-        }
-
-        if (user != null && goingToAuthPages) {
-          return kHomeView;
-        }
-
-        return null;
-      },
       routes: [
         GoRoute(
           path: kLoginView,
