@@ -13,11 +13,8 @@ class HomeBody extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocBuilder<TaskCubit, TaskState>(
       builder: (context, state) {
-        if (state is TaskLoading) {
+        if (state is TaskLoading || state is TaskInitial) {
           return const Center(child: CircularProgressIndicator());
-        }
-        if (state is TaskInitial) {
-          return const SizedBox.shrink();
         }
         if (state is TaskError) {
           return TaskErrorView(message: state.message);
