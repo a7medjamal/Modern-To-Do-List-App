@@ -12,11 +12,11 @@ class ToDoApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (_) => AuthCubit(
-        loginUser: dependencies.loginUser,
-        logoutUser: dependencies.logoutUser,
-        reloadCurrentUser: dependencies.reloadCurrentUser,
-      ),
+      create:
+          (_) => AuthCubit(
+            loginUser: dependencies.loginUser,
+            logoutUser: dependencies.logoutUser,
+          ),
       child: MaterialApp.router(
         debugShowCheckedModeBanner: false,
         routerConfig: AppRouter.router(dependencies),
