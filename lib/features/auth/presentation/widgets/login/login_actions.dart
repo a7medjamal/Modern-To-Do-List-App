@@ -6,6 +6,7 @@ import 'package:cat_to_do_list/features/auth/presentation/screens/cubit/google_s
 import 'package:cat_to_do_list/features/auth/presentation/widgets/login_buttons.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 
 class LoginActions extends StatelessWidget {
   const LoginActions({
@@ -23,14 +24,13 @@ class LoginActions extends StatelessWidget {
       builder: (context, authState) {
         return BlocBuilder<GoogleSignInCubit, GoogleSignInState>(
           builder: (context, googleState) {
-            final isLoading =
-                authState is AuthLoading || googleState is GoogleSignInLoading;
-
             return LoginButtons(
-              isLoading: isLoading,
+              isLoading:
+                  authState is AuthLoading ||
+                  googleState is GoogleSignInLoading,
               onLogin: onLogin,
               onGoogle: onGoogle,
-              onRegister: () => AppRouter.goToRegister(context),
+              onRegister: () => context.push(AppRouter.kRegisterView),
             );
           },
         );

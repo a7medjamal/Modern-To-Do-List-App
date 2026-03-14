@@ -4,8 +4,8 @@ import 'package:cat_to_do_list/features/auth/presentation/widgets/register_form.
 import 'package:flutter/material.dart';
 import 'register_actions.dart';
 
-class RegisterContent extends StatelessWidget {
-  const RegisterContent({
+class RegisterViewBody extends StatelessWidget {
+  const RegisterViewBody({
     super.key,
     required this.formKey,
     required this.emailController,
@@ -34,14 +34,14 @@ class RegisterContent extends StatelessWidget {
   Widget build(BuildContext context) {
     return SingleChildScrollView(
       child: Padding(
-        padding: const EdgeInsets.all(8),
+        padding: const EdgeInsets.symmetric(horizontal: 15),
         child: Form(
           key: formKey,
           child: Column(
             children: [
-              const SizedBox(height: 150),
+              const SizedBox(height: 100),
               const CustomHeader(text: 'Create Account'),
-              const SizedBox(height: 20),
+              const SizedBox(height: 100),
               RegisterForm(
                 emailController: emailController,
                 passwordController: passwordController,
@@ -50,7 +50,7 @@ class RegisterContent extends StatelessWidget {
                 validatePassword: Validators.validatePassword,
                 validateConfirmPassword: _validateConfirmPassword,
               ),
-              const SizedBox(height: 30),
+              const SizedBox(height: 100),
               RegisterActions(
                 formKey: formKey,
                 emailController: emailController,

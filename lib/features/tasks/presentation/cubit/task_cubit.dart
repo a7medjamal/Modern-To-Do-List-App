@@ -66,7 +66,7 @@ class TaskCubit extends Cubit<TaskState> {
       if (task.title.trim().isEmpty) {
         throw TaskRepositoryException('Task title cannot be empty');
       }
-      await _addTask.execute(task);
+      await _addTask.call(task);
     } catch (e) {
       final errorMessage =
           e is TaskRepositoryException
@@ -107,7 +107,7 @@ class TaskCubit extends Cubit<TaskState> {
       if (taskId.isEmpty) {
         throw TaskRepositoryException('Cannot delete task without an ID');
       }
-      await _deleteTask.execute(taskId);
+      await _deleteTask.call(taskId);
     } catch (e) {
       final errorMessage =
           e is TaskRepositoryException

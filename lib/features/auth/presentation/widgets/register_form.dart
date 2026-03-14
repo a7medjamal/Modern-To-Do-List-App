@@ -30,19 +30,29 @@ class RegisterForm extends StatelessWidget {
           keyboardType: TextInputType.emailAddress,
           validator: validateEmail,
         ),
-        const SizedBox(height: 20),
+        const SizedBox(height: 10),
         CustomTextFormField(
           controller: passwordController,
           hintText: 'Password',
           obscureText: true,
           validator: validatePassword,
         ),
-        const SizedBox(height: 20),
+        const SizedBox(height: 10),
         CustomTextFormField(
           controller: confirmPasswordController,
           hintText: 'Confirm Password',
           obscureText: true,
           validator: validateConfirmPassword,
+        ),
+        const SizedBox(height: 50),
+        Text(
+          'Once you create an account, check your inbox and verify your email to start using the app.',
+          textAlign: TextAlign.center,
+          style: TextStyle(
+            fontSize: 16,
+            color: Colors.grey[200],
+            fontWeight: FontWeight.w500,
+          ),
         ),
       ],
     );

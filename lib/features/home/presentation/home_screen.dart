@@ -5,6 +5,7 @@ import 'package:cat_to_do_list/features/home/presentation/widgets/create_new_tas
 import 'package:cat_to_do_list/features/home/presentation/widgets/home_body.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
@@ -34,7 +35,7 @@ class HomeScreen extends StatelessWidget {
       floatingActionButton: Padding(
         padding: const EdgeInsets.only(bottom: 65),
         child: CreateNewTaskButton(
-          onPressed: () => AppRouter.goToNewTask(context),
+          onPressed: () => context.push(AppRouter.kNewTaskPath),
         ),
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,

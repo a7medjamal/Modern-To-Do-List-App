@@ -3,8 +3,8 @@ import 'package:cat_to_do_list/features/auth/presentation/widgets/login/login_ac
 import 'package:cat_to_do_list/features/auth/presentation/widgets/login_form.dart';
 import 'package:flutter/material.dart';
 
-class LoginContent extends StatelessWidget {
-  const LoginContent({
+class LoginViewBody extends StatelessWidget {
+  const LoginViewBody({
     super.key,
     required this.formKey,
     required this.emailController,
@@ -22,20 +22,26 @@ class LoginContent extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 10),
+      padding: const EdgeInsets.symmetric(horizontal: 15),
       child: Form(
         key: formKey,
         child: SingleChildScrollView(
           child: Column(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              const SizedBox(height: 150),
-              const CustomHeader(text: 'Welcome Back'),
-              const SizedBox(height: 20),
+              const SizedBox(height: 80),
+              const CustomHeader(text: 'Taskify'),
+              const SizedBox(height: 80),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [const CustomHeader(text: 'Welcome Back')],
+              ),
+              const SizedBox(height: 30),
               LoginForm(
                 emailController: emailController,
                 passwordController: passwordController,
               ),
-              const SizedBox(height: 40),
+              const SizedBox(height: 100),
               LoginActions(onLogin: onLogin, onGoogle: onGoogle),
             ],
           ),

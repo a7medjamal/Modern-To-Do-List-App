@@ -6,7 +6,14 @@ class CustomHeader extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Center(
-      child: Text(text, style: TextStyle(fontSize: 24, color: Colors.white)),
+      child: Text(
+        text,
+        style: TextStyle(
+          fontSize: 32,
+          color: Colors.white,
+          fontWeight: FontWeight.w500,
+        ),
+      ),
     );
   }
 }

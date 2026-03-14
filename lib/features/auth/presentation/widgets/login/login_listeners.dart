@@ -6,6 +6,7 @@ import 'package:cat_to_do_list/features/auth/presentation/screens/cubit/google_s
 import 'package:cat_to_do_list/features/auth/presentation/screens/cubit/google_sign_in/google_sign_in_state.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 
 class LoginListeners extends StatelessWidget {
   const LoginListeners({super.key, required this.child});
@@ -33,7 +34,7 @@ class LoginListeners extends StatelessWidget {
         BlocListener<AuthCubit, AuthState>(
           listener: (context, state) {
             if (state is AuthAuthenticated) {
-              AppRouter.goToHome(context);
+              context.go(AppRouter.kHomeView);
             } else if (state is AuthFailure) {
               _showDialog(context, 'Login Failed', state.message);
             }
@@ -42,7 +43,7 @@ class LoginListeners extends StatelessWidget {
         BlocListener<GoogleSignInCubit, GoogleSignInState>(
           listener: (context, state) {
             if (state is GoogleSignInSuccess) {
-              AppRouter.goToHome(context);
+              context.go(AppRouter.kHomeView);
             } else if (state is GoogleSignInFailure) {
               _showDialog(context, 'Google Sign In Failed', state.message);
             }

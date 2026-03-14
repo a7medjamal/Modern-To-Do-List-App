@@ -6,11 +6,7 @@ import 'task_tile_content.dart';
 import 'task_tile_trailing.dart';
 
 class TaskTile extends StatelessWidget {
-  const TaskTile({
-    super.key,
-    required this.task,
-    this.isCompletedList = false,
-  });
+  const TaskTile({super.key, required this.task, this.isCompletedList = false});
 
   final Task task;
   final bool isCompletedList;
@@ -21,10 +17,7 @@ class TaskTile extends StatelessWidget {
       leading: TaskCheckbox(task: task),
       title: TaskTileContent(task: task).title,
       subtitle: TaskTileContent(task: task).subtitle,
-      trailing: TaskTileTrailing(
-        task: task,
-        isCompletedList: isCompletedList,
-      ),
+      trailing: TaskTileTrailing(task: task, isCompletedList: isCompletedList),
       dense: true,
       onTap: () => AppRouter.goToEditTask(context, task.id),
     );

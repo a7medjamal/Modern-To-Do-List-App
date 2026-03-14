@@ -6,21 +6,32 @@ class RegisterButtonSection extends StatelessWidget {
     super.key,
     required this.isLoading,
     required this.onRegister,
+    required this.onBackToLogin,
   });
 
   final bool isLoading;
   final VoidCallback onRegister;
+  final VoidCallback onBackToLogin;
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
-      width: double.infinity,
-      child: CustomButton(
-        text: isLoading ? 'LOADING...' : 'REGISTER',
-        textColor: Colors.white,
-        backgroundColor: Colors.green,
-        onPressed: isLoading ? null : onRegister,
-      ),
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        CustomButton(
+          text: isLoading ? 'LOADING...' : 'REGISTER',
+          textColor: Colors.white,
+          backgroundColor: Colors.green,
+          onPressed: isLoading ? null : onRegister,
+        ),
+        const SizedBox(height: 12),
+        CustomButton(
+          text: 'Back to Login',
+          textColor: Colors.white,
+          backgroundColor: const Color(0xff7A12FF),
+          onPressed: isLoading ? null : onBackToLogin,
+        ),
+      ],
     );
   }
 }

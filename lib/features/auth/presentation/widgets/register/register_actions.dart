@@ -3,6 +3,7 @@ import 'package:cat_to_do_list/features/auth/presentation/screens/cubit/register
 import 'package:cat_to_do_list/features/auth/presentation/widgets/register_button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 
 class RegisterActions extends StatelessWidget {
   const RegisterActions({
@@ -34,6 +35,7 @@ class RegisterActions extends StatelessWidget {
         return RegisterButtonSection(
           isLoading: isLoading,
           onRegister: () => _register(context),
+          onBackToLogin: () => context.pop(),
         );
       },
     );

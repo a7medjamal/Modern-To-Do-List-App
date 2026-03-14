@@ -5,7 +5,7 @@ class DeleteTask {
 
   DeleteTask(this.repository);
 
-  Future<void> execute(String taskId) {
+  Future<void> call(String taskId) {
     return repository.deleteTask(taskId);
   }
 }

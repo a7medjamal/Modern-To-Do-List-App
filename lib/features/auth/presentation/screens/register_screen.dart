@@ -1,4 +1,4 @@
-import 'package:cat_to_do_list/features/auth/presentation/widgets/register/register_content.dart';
+import 'package:cat_to_do_list/features/auth/presentation/widgets/register/register_view_body.dart';
 import 'package:cat_to_do_list/features/auth/presentation/widgets/register/register_listeners.dart';
 import 'package:flutter/material.dart';
 
@@ -28,7 +28,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
   Widget build(BuildContext context) {
     return RegisterListeners(
       child: Scaffold(
-        body: RegisterContent(
+        body: RegisterViewBody(
           formKey: formKey,
           emailController: emailController,
           passwordController: passwordController,

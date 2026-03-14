@@ -6,7 +6,7 @@ class AddTask {
 
   AddTask(this.repository);
 
-  Future<void> execute(Task task) {
+  Future<void> call(Task task) {
     return repository.addTask(task);
   }
 }

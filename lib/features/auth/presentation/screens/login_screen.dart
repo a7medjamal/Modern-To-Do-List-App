@@ -1,6 +1,6 @@
 import 'package:cat_to_do_list/features/auth/presentation/screens/cubit/auth/auth_cubit.dart';
 import 'package:cat_to_do_list/features/auth/presentation/screens/cubit/google_sign_in/google_sign_in_cubit.dart';
-import 'package:cat_to_do_list/features/auth/presentation/widgets/login/login_content.dart';
+import 'package:cat_to_do_list/features/auth/presentation/widgets/login/login_view_body.dart';
 import 'package:cat_to_do_list/features/auth/presentation/widgets/login/login_listeners.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -41,7 +41,7 @@ class _LoginScreenState extends State<LoginScreen> {
   Widget build(BuildContext context) {
     return LoginListeners(
       child: Scaffold(
-        body: LoginContent(
+        body: LoginViewBody(
           formKey: _formKey,
           emailController: _emailController,
           passwordController: _passwordController,
