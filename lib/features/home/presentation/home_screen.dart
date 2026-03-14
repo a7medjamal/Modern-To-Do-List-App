@@ -39,18 +39,16 @@ class HomeScreen extends StatelessWidget {
         ),
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
-      body: SafeArea(
-        child: Column(
-          children: [
-            CustomAppBar(
-              pfpPath: 'assets/icons/profile_icon.svg',
-              pName: userName,
-              iconPath: 'assets/icons/home_screen_search_icon.svg',
-            ),
-            const SizedBox(height: 10),
-            const Expanded(child: HomeBody()),
-          ],
-        ),
+      body: Column(
+        children: [
+          CustomAppBar(
+            pfpPath: 'assets/icons/profile_icon.svg',
+            pName: userName,
+            iconPath: 'assets/icons/home_screen_search_icon.svg',
+          ),
+          const SizedBox(height: 10),
+          const Expanded(child: HomeBody()),
+        ],
       ),
     );
   }

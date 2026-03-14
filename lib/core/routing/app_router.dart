@@ -26,10 +26,29 @@ class AppRouter {
 
   static GoRouter router(AppDependencies dependencies) {
     return GoRouter(
-      initialLocation: kLoginView,
+      initialLocation: kHomeView,
       refreshListenable: GoRouterRefreshStream(
         FirebaseAuth.instance.authStateChanges(),
       ),
+      redirect: (context, state) {
+        final user = FirebaseAuth.instance.currentUser;
+        final isSignedIn = user != null;
+        final location = state.matchedLocation;
+        final isAuthRoute =
+            location == kLoginView ||
+            location == kRegisterView ||
+            location == kForgotPasswordView;
+
+        if (!isSignedIn && !isAuthRoute) {
+          return kLoginView;
+        }
+
+        if (isSignedIn && isAuthRoute) {
+          return kHomeView;
+        }
+
+        return null;
+      },
       routes: [
         GoRoute(
           path: kLoginView,

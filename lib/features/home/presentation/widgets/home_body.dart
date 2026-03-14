@@ -16,23 +16,18 @@ class HomeBody extends StatelessWidget {
         if (state is TaskLoading) {
           return const Center(child: CircularProgressIndicator());
         }
-
         if (state is TaskInitial) {
           return const SizedBox.shrink();
         }
-
         if (state is TaskError) {
           return TaskErrorView(message: state.message);
         }
-
         if (state is TaskLoaded) {
           if (state.tasks.isEmpty) {
             return const EmptyTasksView();
           }
-
           return HomeTaskSections(tasks: state.tasks);
         }
-
         return const SizedBox.shrink();
       },
     );
