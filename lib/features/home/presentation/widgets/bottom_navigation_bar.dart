@@ -70,7 +70,7 @@ class _BottomNavBarState extends State<BottomNavBar> {
                 onPressed: () async {
                   Navigator.of(sheetContext).pop();
                   await context.read<AuthCubit>().logout();
-                  context.go(AppRouter.kLoginView);
+                  AppRouter.goToLogin(context);
                 },
                 child: const Text('Log Out'),
               ),

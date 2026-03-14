@@ -6,7 +6,6 @@ import 'package:cat_to_do_list/features/auth/presentation/screens/cubit/google_s
 import 'package:cat_to_do_list/features/auth/presentation/screens/cubit/google_sign_in/google_sign_in_state.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:go_router/go_router.dart';
 
 class LoginListeners extends StatelessWidget {
   const LoginListeners({super.key, required this.child});
@@ -14,16 +13,22 @@ class LoginListeners extends StatelessWidget {
   final Widget child;
 
   void _showDialog(BuildContext context, String title, String message) {
+    if (!context.mounted) return;
+
     showDialog(
       context: context,
-      builder:
-          (dialogContext) => UserAlertDialog(
-            title: title,
-            message: message,
-            onPressed: () {
-              Navigator.of(dialogContext, rootNavigator: true).pop();
-            },
-          ),
+      barrierDismissible: false,
+      builder: (dialogContext) {
+        return UserAlertDialog(
+          title: title,
+          message: message,
+          onPressed: () {
+            if (Navigator.of(dialogContext).canPop()) {
+              Navigator.of(dialogContext).pop();
+            }
+          },
+        );
+      },
     );
   }
 
@@ -33,8 +38,10 @@ class LoginListeners extends StatelessWidget {
       listeners: [
         BlocListener<AuthCubit, AuthState>(
           listener: (context, state) {
+            if (!context.mounted) return;
+
             if (state is AuthAuthenticated) {
-              context.go(AppRouter.kHomeView);
+              AppRouter.goToHome(context);
             } else if (state is AuthFailure) {
               _showDialog(context, 'Login Failed', state.message);
             }
@@ -42,8 +49,10 @@ class LoginListeners extends StatelessWidget {
         ),
         BlocListener<GoogleSignInCubit, GoogleSignInState>(
           listener: (context, state) {
+            if (!context.mounted) return;
+
             if (state is GoogleSignInSuccess) {
-              context.go(AppRouter.kHomeView);
+              AppRouter.goToHome(context);
             } else if (state is GoogleSignInFailure) {
               _showDialog(context, 'Google Sign In Failed', state.message);
             }

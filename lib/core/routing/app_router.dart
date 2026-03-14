@@ -30,7 +30,6 @@ class AppRouter {
       refreshListenable: GoRouterRefreshStream(
         FirebaseAuth.instance.authStateChanges(),
       ),
-
       routes: [
         GoRoute(
           path: kLoginView,
@@ -90,8 +89,7 @@ class AppRouter {
             ),
             GoRoute(
               path: kNewTaskPath,
-              builder:
-                  (context, state) => const TaskDetailsScreen(taskId: null),
+              builder: (context, state) => const TaskDetailsScreen(),
             ),
             GoRoute(
               path: kEditTaskPath,
@@ -106,6 +104,18 @@ class AppRouter {
     );
   }
 
-  static void goToEditTask(BuildContext context, String taskId) =>
-      context.push('$kTaskDetailsBasePath/$taskId');
+  static void goToHome(BuildContext context) => context.go(kHomeView);
+
+  static void goToLogin(BuildContext context) => context.go(kLoginView);
+
+  static void goToRegister(BuildContext context) => context.push(kRegisterView);
+
+  static void goToForgotPassword(BuildContext context) =>
+      context.push(kForgotPasswordView);
+
+  static void goToNewTask(BuildContext context) => context.push(kNewTaskPath);
+
+  static void goToEditTask(BuildContext context, String taskId) {
+    context.push('$kTaskDetailsBasePath/$taskId');
+  }
 }
