@@ -4,5 +4,7 @@ abstract class AuthRepository {
   Future<void> logout();
   Future<void> signInWithGoogle();
   Future<void> sendEmailVerification();
+  Future<bool> isEmailVerified();
+  Future<void> reloadUser();
   Future<void> sendPasswordResetEmail(String email);
 }

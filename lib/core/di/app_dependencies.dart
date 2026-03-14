@@ -1,5 +1,7 @@
 import 'package:cat_to_do_list/features/auth/data/repositories/auth_repo_impl.dart';
+import 'package:cat_to_do_list/features/auth/domain/usecases/check_email_verified.dart';
 import 'package:cat_to_do_list/features/auth/domain/usecases/login_user.dart';
+import 'package:cat_to_do_list/features/auth/domain/usecases/reload_current_user.dart';
 import 'package:cat_to_do_list/features/auth/domain/usecases/send_email_verification.dart';
 import 'package:cat_to_do_list/features/auth/domain/usecases/send_password_reset.dart';
 import 'package:cat_to_do_list/features/auth/domain/usecases/signup_user.dart';
@@ -24,6 +26,8 @@ class AppDependencies {
   late final SignInWithGoogle signInWithGoogle;
   late final SendEmailVerification sendEmailVerification;
   late final SendPasswordResetEmail sendPasswordResetEmail;
+  late final ReloadCurrentUser reloadCurrentUser;
+  late final CheckEmailVerified checkEmailVerified;
 
   late final AddTask addTask;
   late final UpdateTask updateTask;
@@ -43,6 +47,8 @@ class AppDependencies {
     signInWithGoogle = SignInWithGoogle(authRepository);
     sendEmailVerification = SendEmailVerification(authRepository);
     sendPasswordResetEmail = SendPasswordResetEmail(authRepository);
+    reloadCurrentUser = ReloadCurrentUser(authRepository);
+    checkEmailVerified = CheckEmailVerified(authRepository);
 
     addTask = AddTask(taskRepository);
     updateTask = UpdateTask(taskRepository);

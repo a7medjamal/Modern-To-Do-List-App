@@ -74,4 +74,16 @@ class AuthRepositoryImpl implements AuthRepository {
   Future<void> sendPasswordResetEmail(String email) async {
     await _auth.sendPasswordResetEmail(email: email);
   }
+
+  @override
+  Future<bool> isEmailVerified() async {
+    final user = _auth.currentUser;
+    return user?.emailVerified ?? false;
+  }
+
+  @override
+  Future<void> reloadUser() async {
+    final user = _auth.currentUser;
+    await user?.reload();
+  }
 }

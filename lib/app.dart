@@ -15,6 +15,7 @@ class ToDoApp extends StatelessWidget {
       create: (_) => AuthCubit(
         loginUser: dependencies.loginUser,
         logoutUser: dependencies.logoutUser,
+        reloadCurrentUser: dependencies.reloadCurrentUser,
       ),
       child: MaterialApp.router(
         debugShowCheckedModeBanner: false,

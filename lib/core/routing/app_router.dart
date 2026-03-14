@@ -65,7 +65,11 @@ class AppRouter {
           path: kRegisterView,
           builder: (context, state) {
             return BlocProvider<RegisterCubit>(
-              create: (_) => RegisterCubit(signUpUser: dependencies.signUpUser),
+              create:
+                  (_) => RegisterCubit(
+                    signUpUser: dependencies.signUpUser,
+                    sendEmailVerification: dependencies.sendEmailVerification,
+                  ),
               child: const RegisterScreen(),
             );
           },
